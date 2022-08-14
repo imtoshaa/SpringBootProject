@@ -58,13 +58,13 @@
                             <div class="card w-25 m-1" type="category">
                                 <div class="card-body">
                                     <img class="card-img" style="width:150px;height:120px"
-                                         src="${contextPath}/images/product/${order.getValue().getProduct().getImg()}"
+                                         src="${contextPath}/images/product/${order.getProduct().getImg()}"
                                          alt="Card image">
                                     <br>
-                                    <h6>Дата заказа: ${order.getValue().getDate()}</h6>
-                                    <h6>Модель: ${order.getValue().getProduct().getName()}</h6>
+                                    <h6>Дата заказа: ${order.getOrder().getDate()}</h6>
+                                    <h6>Модель: ${order.getProduct().getName()}</h6>
                                     <br>
-                                    <h6>Цена: ${order.getValue().getProduct().getPrice()} BYN</h6>
+                                    <h6>Цена: ${order.getProduct().getPrice()} BYN</h6>
                                     <br>
                                 </div>
                             </div>

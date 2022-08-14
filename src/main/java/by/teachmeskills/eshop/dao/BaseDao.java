@@ -6,8 +6,6 @@ import java.util.List;
 
 public interface BaseDao<T extends BaseEntity> {
 
-    ConnectionPool pool = ConnectionPool.getInstance();
-
     void create(T entity) throws Exception;
 
     List<T> read() throws Exception;

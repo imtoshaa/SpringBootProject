@@ -47,22 +47,8 @@ public class Cart {
         totalPrice = 0;
     }
 
-    public void buy(User user) throws Exception {
-
-        Date orderDate = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String currentTime = sdf.format(orderDate);
-
-        for(Product product : products.values()) {
-           Order order = Order.builder()
-                   .date(currentTime)
-                   .price(product.getPrice())
-                   .user(user)
-                   .build();
-
-           orderService.create(order);
-        }
-        products.clear();
-        totalPrice = 0;
-    }
+//    public void buy(User user) throws Exception {
+//        products.clear();
+//        totalPrice = 0;
+//    }
 }

@@ -52,7 +52,7 @@
                         <h6>Цена: ${product.getPrice()} BYN</h6>
                         <br>
                         <h6>Описание: ${product.getDescription()} </h6>
-                        <a href="${contextPath}/eshop?command=product-redirect&productId=${product.getId()}" class="btn btn-primary">Перейти к товару</a>
+                        <a href="${contextPath}/product/${product.getId()}" class="btn btn-primary">Перейти к товару</a>
                         <br>
                     </td>
                 </tr>

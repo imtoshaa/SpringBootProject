@@ -11,4 +11,5 @@ public interface IUserService {
     ModelAndView login(User user) throws Exception;
     ModelAndView registration(User user) throws Exception;
     ModelAndView getUserDataForMyPage(User user) throws Exception;
+    boolean isAuthenticated(User user) throws Exception;
 }

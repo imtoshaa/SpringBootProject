@@ -1,6 +1,5 @@
 package by.teachmeskills.eshop.domain.entities;
 
-import by.teachmeskills.eshop.services.impl.ProductServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +8,6 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.sql.ResultSet;

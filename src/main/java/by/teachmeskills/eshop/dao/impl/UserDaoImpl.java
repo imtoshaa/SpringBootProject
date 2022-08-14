@@ -3,8 +3,10 @@ package by.teachmeskills.eshop.dao.impl;
 import by.teachmeskills.eshop.dao.IUserDao;
 import by.teachmeskills.eshop.domain.entities.User;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @AllArgsConstructor
 @Repository
 public class UserDaoImpl implements IUserDao {
@@ -58,24 +61,25 @@ public class UserDaoImpl implements IUserDao {
         Query<User> query = session.createQuery("select u from User u where u.username=:username and u.password=:password");
         query.setParameter("username", username);
         query.setParameter("password", pass);
-        return query.getSingleResult();
+        return query.uniqueResult();
     }
 
     @Override
     public boolean checkUser(User checkedUser) throws Exception {
+        User user = null;
         Session session = sessionFactory.getCurrentSession();
-        Query<User> query = session.createNativeQuery(
-                "SELECT IF (SELECT * FROM ESHOP_DB.USERS.USERNAME = ? AND ESHOP_DB.USERS.PASSWORD = ?)");
-        query.setParameter(1, checkedUser.getUsername());
-        query.setParameter(2, checkedUser.getPassword());
-        return Optional.ofNullable(query.getSingleResult()).isPresent();
+        Query<User> query =  session.createQuery("select u from User u where u.username=:username and u.password=:password");
+        query.setParameter("username", checkedUser.getUsername());
+        query.setParameter("password", checkedUser.getPassword());
+        user = query.uniqueResult();
+        return user != null;
     }
 
     @Override
     public boolean checkUserByUsername(String username) throws Exception {Session session = sessionFactory.getCurrentSession();
-        Query<User> query = session.createNativeQuery(
-                "SELECT IF (SELECT * FROM ESHOP_DB.USERS.USERNAME = ?");
-        query.setParameter(1, username);
-        return Optional.ofNullable(query.getSingleResult()).isPresent();
+        Query<User> query =  session.createQuery("select u from User u where u.username=:username");
+        query.setParameter("username", username);
+        User user = query.uniqueResult();
+        return user == null;
     }
 }

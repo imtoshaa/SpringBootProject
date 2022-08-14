@@ -66,7 +66,7 @@ public class OrderDaoImpl implements IOrderDao {
     public Set<Order> getUserOrdersById(int userId) throws Exception {
         Session session = sessionFactory.getCurrentSession();
         Query<Order> query = session.createQuery(
-                "select u from Order u where u.userId=:userId");
+                "select o from Order o where o.user.id=:userId");
         query.setParameter("userId", userId);
         return new HashSet<>(query.getResultList());
 

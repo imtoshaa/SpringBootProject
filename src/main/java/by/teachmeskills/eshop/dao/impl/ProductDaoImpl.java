@@ -60,7 +60,7 @@ public class ProductDaoImpl implements IProductDao {
     @Override
     public List<Product> getProductsByCategoryId(int categoryId) throws Exception {
         Session session = sessionFactory.getCurrentSession();
-        Query<Product> query = session.createQuery("select p from Product p where p.categoryId=:categoryId");
+        Query<Product> query = session.createQuery("select p from Product p where p.category.id=:categoryId");
         query.setParameter("categoryId", categoryId);
         return query.getResultList();
     }

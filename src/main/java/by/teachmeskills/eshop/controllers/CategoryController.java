@@ -5,6 +5,7 @@ import by.teachmeskills.eshop.domain.entities.User;
 import by.teachmeskills.eshop.services.ICategoryService;
 import by.teachmeskills.eshop.services.impl.CategoryServiceImpl;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +19,7 @@ import static by.teachmeskills.eshop.utils.EshopConstants.CATEGORY;
 import static by.teachmeskills.eshop.utils.EshopConstants.SHOPPING_CART;
 import static by.teachmeskills.eshop.utils.EshopConstants.USER;
 
+@Slf4j
 @RestController
 @SessionAttributes({CATEGORY, USER, SHOPPING_CART})
 @RequestMapping("/")
@@ -28,11 +30,13 @@ public class CategoryController {
 
     @GetMapping()
     public ModelAndView getCategoriesPage() throws Exception {
+        log.info("Redirect to all categories page.");
         return categoryService.getCategories();
     }
 
     @GetMapping("/category/{categoryId}")
     public ModelAndView getCategoryPage(@PathVariable int categoryId) throws Exception {
+        log.info("Redirect to category page id=" + categoryId);
         return categoryService.getCategoryData(categoryId);
     }
 

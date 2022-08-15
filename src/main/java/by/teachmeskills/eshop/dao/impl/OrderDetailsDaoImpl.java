@@ -6,29 +6,30 @@ import by.teachmeskills.eshop.domain.entities.User;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @AllArgsConstructor
 @Repository
+@Transactional
 public class OrderDetailsDaoImpl implements IOrderDetailsDao {
 
-    private final SessionFactory sessionFactory;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public void saveOrderDetails(OrderDetails orderDetails) {
-        Session session = sessionFactory.getCurrentSession();
-        session.beginTransaction();
-        session.save(orderDetails);
-        session.getTransaction().commit();
+        entityManager.persist(orderDetails);
     }
 
     @Override
     public List<OrderDetails> getOrderDetails(User user) {
-        Session session = sessionFactory.getCurrentSession();
-        Query<OrderDetails> getOrders = session.createQuery(
+        Query getOrders = entityManager.createQuery(
                 "select u from OrderDetails u where u.orderDetailsId.order.user.id=:userId");
         getOrders.setParameter("userId", user.getId());
         return getOrders.getResultList();

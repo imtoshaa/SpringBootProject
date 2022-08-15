@@ -4,43 +4,42 @@ import by.teachmeskills.eshop.dao.ICategoryDao;
 import by.teachmeskills.eshop.domain.entities.Category;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @AllArgsConstructor
 @Repository
+@Transactional
 public class CategoryDaoImpl implements ICategoryDao {
 
-    private final SessionFactory sessionFactory;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public void create(Category category) throws Exception {
-        Session session = sessionFactory.getCurrentSession();
-        session.beginTransaction();
-        session.save(category);
-        session.getTransaction().commit();
+        entityManager.persist(category);
     }
 
     @Override
     public List<Category> read() throws Exception {
-        Session session = sessionFactory.getCurrentSession();
-        return session.createQuery("from Category ").list();
+        return entityManager.createQuery("select с from Category с ").getResultList();
     }
 
     @Override
     public void update(Category category) throws Exception {
-        Session session = sessionFactory.getCurrentSession();
-        session.beginTransaction();
-        session.merge(category);
-        session.getTransaction().commit();
+        entityManager.merge(category);
     }
 
     @Override
     public void delete(Category category) throws Exception {
-        Session session = sessionFactory.getCurrentSession();
-        session.beginTransaction();
-        session.delete(category);
-        session.getTransaction().commit();
+        if (entityManager.contains(category)) {
+            entityManager.remove(category);
+        } else {
+            entityManager.remove(entityManager.merge(category));
+        }
     }
 }

@@ -6,9 +6,12 @@ import by.teachmeskills.eshop.domain.entities.Product;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.transaction.Transactional;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -28,44 +31,39 @@ import static by.teachmeskills.eshop.utils.EshopConstants.USER_ID;
 
 @AllArgsConstructor
 @Repository
+@Transactional
 public class OrderDaoImpl implements IOrderDao {
 
-    private final SessionFactory sessionFactory;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public void create(Order order) throws Exception {
-        Session session = sessionFactory.getCurrentSession();
-        session.beginTransaction();
-        session.save(order);
-        session.getTransaction().commit();
+        entityManager.persist(order);
     }
 
     @Override
     public List<Order> read() throws Exception {
-        Session session = sessionFactory.getCurrentSession();
-        return session.createQuery("from Order ").list();
+        return entityManager.createQuery("select r from Order r ").getResultList();
     }
 
     @Override
     public void update(Order order) throws Exception {
-        Session session = sessionFactory.getCurrentSession();
-        session.beginTransaction();
-        session.merge(order);
-        session.getTransaction().commit();
+        entityManager.merge(order);
     }
 
     @Override
     public void delete(Order order) throws Exception {
-        Session session = sessionFactory.getCurrentSession();
-        session.beginTransaction();
-        session.delete(order);
-        session.getTransaction().commit();
+        if (entityManager.contains(order)) {
+            entityManager.remove(order);
+        } else {
+            entityManager.remove(entityManager.merge(order));
+        }
     }
 
     @Override
     public Set<Order> getUserOrdersById(int userId) throws Exception {
-        Session session = sessionFactory.getCurrentSession();
-        Query<Order> query = session.createQuery(
+        Query query = entityManager.createQuery(
                 "select o from Order o where o.user.id=:userId");
         query.setParameter("userId", userId);
         return new HashSet<>(query.getResultList());

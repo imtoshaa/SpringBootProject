@@ -4,6 +4,7 @@ import by.teachmeskills.eshop.domain.Cart;
 import by.teachmeskills.eshop.domain.entities.User;
 import by.teachmeskills.eshop.services.CartService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import static by.teachmeskills.eshop.utils.EshopConstants.SHOPPING_CART;
 import static by.teachmeskills.eshop.utils.EshopConstants.USER;
 
+@Slf4j
 @RestController
 @SessionAttributes({SHOPPING_CART, USER})
 @RequestMapping("/cart")
@@ -26,23 +28,27 @@ public class CartController {
 
     @GetMapping("/open")
     public ModelAndView redirectToShoppingCart(@SessionAttribute(SHOPPING_CART) Cart cart) {
+        log.info("Redirect to cart page.");
         return cartService.openCart(cart);
     }
 
     @GetMapping("/add/{productId}")
     public ModelAndView addProductToCart(@SessionAttribute(SHOPPING_CART) Cart cart,
                                          @PathVariable int productId) throws Exception {
+        log.info("Product with id=" + productId + " added to cart.");
         return cartService.addProductToCart(cart, productId);
     }
 
     @GetMapping("/delete/{removeId}")
     public ModelAndView delProductFromCart(@SessionAttribute(SHOPPING_CART) Cart cart,
                                            @PathVariable int removeId){
+        log.info("Product with id=" + removeId + " has been removed from the shopping cart.");
         return cartService.removeProduct(cart, removeId);
     }
 
     @GetMapping("/clear")
     public ModelAndView clearUserCart(@SessionAttribute(SHOPPING_CART) Cart cart) {
+        log.info("The cart is cleared.");
         return cartService.clearCart(cart);
     }
 

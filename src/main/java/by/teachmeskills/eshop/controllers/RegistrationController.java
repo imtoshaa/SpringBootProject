@@ -3,6 +3,7 @@ package by.teachmeskills.eshop.controllers;
 import by.teachmeskills.eshop.domain.entities.User;
 import by.teachmeskills.eshop.services.IUserService;
 import by.teachmeskills.eshop.services.impl.UserServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,7 @@ import static by.teachmeskills.eshop.utils.PagesPathEnum.REGISTRATION_PAGE;
 import static by.teachmeskills.eshop.utils.PagesPathEnum.SIGN_IN_PAGE;
 import static by.teachmeskills.eshop.utils.EshopConstants.USER;
 
+@Slf4j
 @RestController
 @SessionAttributes({USER})
 @RequestMapping("/registration")
@@ -27,6 +29,7 @@ public class RegistrationController {
 
     @GetMapping
     public ModelAndView openRegistrationPage() {
+        log.info("Redirect to registration page");
         return new ModelAndView(REGISTRATION_PAGE.getPath());
     }
 

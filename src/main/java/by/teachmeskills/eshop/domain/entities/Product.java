@@ -10,15 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import static by.teachmeskills.eshop.utils.EshopConstants.CATEGORY_ID;
-import static by.teachmeskills.eshop.utils.EshopConstants.DESCRIPTION;
-import static by.teachmeskills.eshop.utils.EshopConstants.ID;
-import static by.teachmeskills.eshop.utils.EshopConstants.IMG;
-import static by.teachmeskills.eshop.utils.EshopConstants.NAME;
-import static by.teachmeskills.eshop.utils.EshopConstants.PRICE;
 
 @Getter
 @SuperBuilder
@@ -38,6 +29,4 @@ public class Product extends BaseEntity {
     @ManyToOne(optional = false)
     @JoinColumn(name = "CATEGORY_ID", nullable = false, referencedColumnName = "id")
     private Category category;
-
-
 }

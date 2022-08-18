@@ -28,9 +28,8 @@ public class AuthController {
 
     @GetMapping
     public ModelAndView openSignInPage() {
-        log.info("inside open page login");
+        log.info("Redirect to signin page.");
         return new ModelAndView(SIGN_IN_PAGE.getPath());
-//        return new ModelAndView("signin.jsp");
     }
 
     @PostMapping

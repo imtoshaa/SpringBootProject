@@ -3,79 +3,79 @@ package by.teachmeskills.eshop.dao.impl;
 import by.teachmeskills.eshop.dao.IUserDao;
 import by.teachmeskills.eshop.domain.entities.User;
 import lombok.AllArgsConstructor;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
+@Slf4j
 @AllArgsConstructor
 @Repository
+@Transactional
 public class UserDaoImpl implements IUserDao {
 
-    private final SessionFactory sessionFactory;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public void create(User user) throws Exception {
-        Session session = sessionFactory.getCurrentSession();
-        session.beginTransaction();
-        session.save(user);
-        session.getTransaction().commit();
+        entityManager.persist(user);
     }
 
     @Override
     public List<User> read() throws Exception {
-        Session session = sessionFactory.getCurrentSession();
-        return session.createQuery("from User ").list();
+        return entityManager.createQuery("select с from Category с ").getResultList();
     }
 
     @Override
     public void update(User user) throws Exception {
-        Session session = sessionFactory.getCurrentSession();
-        session.beginTransaction();
-        session.merge(user);
-        session.getTransaction().commit();
+        entityManager.merge(user);
     }
 
     @Override
     public void delete(User user) throws Exception {
-        Session session = sessionFactory.getCurrentSession();
-        session.beginTransaction();
-        session.delete(user);
-        session.getTransaction().commit();
+        if (entityManager.contains(user)) {
+            entityManager.remove(user);
+        } else {
+            entityManager.remove(entityManager.merge(user));
+        }
     }
 
     @Override
     public User getUserByLoginAndPassword(String username, String pass) throws Exception {
-        Session session = sessionFactory.getCurrentSession();
-        Query<User> query = session.createQuery("select u from User u where u.username=:username and u.password=:password");
+        Query query = entityManager.createQuery("select u from User u where u.username=:username and u.password=:password");
         query.setParameter("username", username);
         query.setParameter("password", pass);
-        return query.getSingleResult();
+        return (User) query.getSingleResult();
     }
 
     @Override
     public boolean checkUser(User checkedUser) throws Exception {
-        Session session = sessionFactory.getCurrentSession();
-        Query<User> query = session.createNativeQuery(
-                "SELECT IF (SELECT * FROM ESHOP_DB.USERS.USERNAME = ? AND ESHOP_DB.USERS.PASSWORD = ?)");
-        query.setParameter(1, checkedUser.getUsername());
-        query.setParameter(2, checkedUser.getPassword());
-        return Optional.ofNullable(query.getSingleResult()).isPresent();
+        try {
+            Query query =  entityManager.createQuery("select u from User u where u.username=:username and u.password=:password");
+            query.setParameter("username", checkedUser.getUsername());
+            query.setParameter("password", checkedUser.getPassword());
+            User user = (User) query.getSingleResult();
+        } catch (NoResultException e) {
+            return false;
+        }
+        return true;
     }
 
     @Override
-    public boolean checkUserByUsername(String username) throws Exception {Session session = sessionFactory.getCurrentSession();
-        Query<User> query = session.createNativeQuery(
-                "SELECT IF (SELECT * FROM ESHOP_DB.USERS.USERNAME = ?");
-        query.setParameter(1, username);
-        return Optional.ofNullable(query.getSingleResult()).isPresent();
+    public boolean checkUserByUsername(String username) throws Exception {
+        try {
+            Query query =  entityManager.createQuery("select u from User u where u.username=:username");
+            query.setParameter("username", username);
+            User user = (User) query.getSingleResult();
+        } catch (NoResultException e) {
+            return true;
+        }
+        return false;
     }
 }

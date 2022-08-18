@@ -3,6 +3,7 @@ package by.teachmeskills.eshop.controllers;
 import by.teachmeskills.eshop.domain.entities.Product;
 import by.teachmeskills.eshop.services.SearchService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import static by.teachmeskills.eshop.utils.EshopConstants.PRODUCTS_FROM_SEARCH;
 
+@Slf4j
 @RestController
 @SessionAttributes({PRODUCTS_FROM_SEARCH})
 @RequestMapping("/search")
@@ -26,6 +28,7 @@ public class SearchController {
 
     @PostMapping
     public ModelAndView getSearchResult(@RequestParam String searchQuery) throws Exception {
+        log.info("Search in progress...");
         return searchService.getSearchResult(searchQuery);
     }
 

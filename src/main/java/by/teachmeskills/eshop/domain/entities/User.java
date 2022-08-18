@@ -79,29 +79,4 @@ public class User extends BaseEntity {
         return Objects.hash(name, password);
     }
 
-    public static Builder newBuilder() {
-        return new Builder();
-    }
-
-    public static final class Builder {
-        private Builder() {
-        }
-
-        public User buildUserFromResultSet(ResultSet rs) throws SQLException {
-            User user = null;
-            if (rs.next()) {
-                int id = rs.getInt(ID);
-                String log = rs.getString(USERNAME);
-                String name = rs.getString(NAME);
-                String password = rs.getString(PASSWORD);
-                String surname = rs.getString(SURNAME);
-                String img = rs.getString(IMG);
-                String info = rs.getString(INFO);
-                String email = rs.getString(EMAIL);
-                String birthday = rs.getString(BIRTHDAY);
-                user = new User(id, log, name, surname, password, img, info, email, birthday);
-            }
-            return user;
-        }
-    }
 }
